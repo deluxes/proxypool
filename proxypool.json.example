@@ -12,7 +12,9 @@
   , "redisAuth": "my redis auth"
   , "redisChanName": "shares"
 
-  , "publicKeyByte": 30
+  , "publicKeyByte": 71
+  , "segwit_publicKeyByte": 5
+  , "bech32_hrp": "vtc"
   , "extraNonce2Size": 2
   , "extraNonce3Size": 2
 

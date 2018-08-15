@@ -21,6 +21,7 @@ module ProxyPool.Mining (
 ) where
 
 import ProxyPool.Stratum
+import ProxyPool.Bech32 (bech32Decode)
 
 import Foreign hiding (unsafePerformIO)
 import Foreign.C.Types
@@ -171,12 +172,18 @@ checksumAddress version bs = B.head bytes == version && B.take 4 (doubleSHA (B.t
     where value :: Integer = B.foldl' (\acc byte -> acc * 58 + (b58Map IM.! (fromIntegral byte))) 0 bs
           bytes = B.reverse $ BL.toStrict $ B.toLazyByteString $ packIntLE value 25
 
+-- | Verify that only the allowed b58 chars are in the string
+charCheck :: Int -> Bool
+charCheck c | c /= ord '0' && c /= ord 'O' && c /= ord 'I' && c /= ord 'l'
+            = (c >= ord '1' && c <= ord '9') || (c >= ord 'A' && c <= ord 'Z') || (c >= ord 'a' && c <= ord 'z')
+charCheck _ = False
+
 -- | Check if the miner's address is valid
-validateAddress :: Word8 -> B.ByteString -> Bool
-validateAddress prepend address = len >= 27 && len <= 34 && B.all (charCheck . fromIntegral) address && checksumAddress prepend address
-    where len = B.length address
-          -- | Verify that only the allowed b58 chars are in the string
-          charCheck :: Int -> Bool
-          charCheck c | c /= ord '0' && c /= ord 'O' && c /= ord 'I' && c /= ord 'l'
-                      = (c >= ord '1' && c <= ord '9') || (c >= ord 'A' && c <= ord 'Z') || (c >= ord 'a' && c <= ord 'z')
-          charCheck _ = False
+validateAddress :: Word8 -> Word8 -> B.ByteString -> B.ByteString -> Bool
+validateAddress prepend segwit_prepend hrp address = do
+    case bech32Decode address of
+        Nothing -> do
+            let len = B.length address
+            len >= 27 && len <= 34 && B.all (charCheck . fromIntegral) address && (checksumAddress prepend address || checksumAddress segwit_prepend address)
+        Just(hrp', dat) -> (hrp == hrp') && not (null dat)
+        
