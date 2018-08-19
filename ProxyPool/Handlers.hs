@@ -126,7 +126,7 @@ data ServerSettings
                      -- | The byte prepended to the public key of a segwit address, used to verify miner addresses, Nothing to disable verification, 5 for Bitcoin, 5 for Vertcoin
                      , s_segwit_publickeyByte :: Maybe Word8
                      -- | The human readable part used to verify miner addresses, Nothing to disable verification, bc for Bitcoin, vtc for Vertcoin
-                     , s_bech32_hrp          :: Maybe B8.ByteString
+		     , s_bech32_hrp          :: Maybe T.Text
                      -- | Size of the new en2
                      , s_extraNonce2Size     :: Int
                      -- | Size of the new en3
@@ -419,7 +419,7 @@ handleClient global local = do
             let bech32_hrp = s_bech32_hrp . g_settings $ global
 
             -- validate address (if required)
-            if isNothing keybyte || isNothing segwit_keybyte || isNothing bech32_hrp || validateAddress (fromJust keybyte) (fromJust segwit_keybyte) (fromJust bech32_hrp) (T.encodeUtf8 user)
+            if isNothing keybyte || isNothing segwit_keybyte || isNothing bech32_hrp || validateAddress (fromJust keybyte) (fromJust segwit_keybyte) (T.encodeUtf8 (fromJust bech32_hrp)) (T.encodeUtf8 user)
                 then do
                     liftIO $ writeResponse rid $ General $ Right $ Bool True
                     finish user
