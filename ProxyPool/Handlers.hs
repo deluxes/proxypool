@@ -645,7 +645,7 @@ handleServer global local = do
             Just (Response _ (SetDifficulty diff)) -> do
                 debugM "server" $ "Upstream set difficulty to: " ++ show diff
                 -- save the upstream diff
-                let newDiff = diff / 65536
+                let newDiff = diff / 4194304
                 writeIORef (g_upstreamDiff global) newDiff
             Just (Response (Number _) (General (Right _)))  -> debugM "share" $ "Upstream share accepted"
             Just (Response (Number _) (General (Left err))) -> debugM "share" $ "Upstream share rejected: " ++ show err

@@ -16,7 +16,7 @@ build-type:          Simple
 cabal-version:       >=1.24.2
 
 library
-    c-sources:           scrypt/scrypt.c
+    c-sources:           lyra2re/Lyra2RE.c, lyra2re/Lyra2.c, lyra2re/Sponge.c, lyra2re/sha3/blake.c, lyra2re/sha3/bmw.c, lyra2re/sha3/cubehash.c, lyra2re/sha3/keccak.c, lyra2re/sha3/skein.c
     cc-options:          -Wall -std=c99
     include-dirs:        include
     ghc-options:         -Wall -threaded
