@@ -2,7 +2,7 @@
 -- documentation, see http://haskell.org/cabal/users-guide/
 
 name:                proxypool
-version:             0.1.0.0
+version:             0.2.0.0
 synopsis:            Stratum to Stratum mining proxy
 description:         Stratum proxy pool
 license:             AGPL-3
@@ -13,24 +13,23 @@ maintainer:          jpmorgan@doge.st
 category:            Network
 build-type:          Simple
 -- extra-source-files:  
-cabal-version:       >=1.10
+cabal-version:       >=1.24.2
 
 library
-    c-sources:           scrypt/scrypt.c
+    c-sources:           lyra2re/Lyra2RE.c, lyra2re/Lyra2.c, lyra2re/Sponge.c, lyra2re/sha3/blake.c, lyra2re/sha3/bmw.c, lyra2re/sha3/cubehash.c, lyra2re/sha3/keccak.c, lyra2re/sha3/skein.c
     cc-options:          -Wall -std=c99
     include-dirs:        include
     ghc-options:         -Wall -threaded
     ghc-prof-options:    -auto-all -caf-all -rtsopts
-    exposed-modules:     ProxyPool.Network, ProxyPool.Stratum, ProxyPool.Handlers, ProxyPool.Mining
+    exposed-modules:     ProxyPool.Network, ProxyPool.Stratum, ProxyPool.Handlers, ProxyPool.Mining, ProxyPool.Bech32
     -- other-extensions:
     build-depends:       base >= 4.6
                        , containers >= 0.5
                        , mtl >= 2.1.2
                        , transformers >= 0.3.0.0
                        , network >= 2.4.2.2
-                       , bytestring >= 0.10
+                       , bytestring >= 0.10.8
                        , stm >= 2.4.2
-                       , select >= 0.4.0.1
                        , aeson >= 0.6.2.1
                        , text >= 1.0.0.1
                        , unix >= 2.6.0.0
@@ -44,6 +43,8 @@ library
                        , time >= 1.1.4
                        , stm >= 2.4.2
                        , unordered-containers >= 0.2.3.3
+                       , array >= 0.5.1.1
+                       , select >= 0.4.0.1
 
     default-language:    Haskell2010
 

@@ -47,9 +47,9 @@ import qualified Data.IntMap as IM
 
 import qualified Crypto.Hash.SHA256 as S
 
-#include "scrypt.h"
+#include "Lyra2RE.h"
 
-foreign import ccall "scrypt_1024_1_1_256" c_scrypt :: Ptr CChar -> Ptr CChar -> IO ()
+foreign import ccall "lyra2re2_hash" c_scrypt :: Ptr CChar -> Ptr CChar -> IO ()
 
 data Work
     = Work { w_job             :: T.Text
